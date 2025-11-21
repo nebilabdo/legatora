@@ -39,7 +39,7 @@ export default function DocumentVerificationPage() {
   const fetchData = async () => {
     try {
       setLoading(true)
-      const res = await fetch('http://127.0.0.1:8000/external-doc-verification?sort_by=newest')
+      const res = await fetch('https://legatora-backend.onrender.com/external-doc-verification?sort_by=newest')
       if (!res.ok) throw new Error('Failed to fetch')
       const data: VerificationItem[] = await res.json()
       setItems(data)
