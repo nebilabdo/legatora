@@ -12,14 +12,13 @@ app = FastAPI(
     description="Mock API for the LEGATORA Admin Portal using FastAPI and SQLite."
 )
 
-# ------------------ CORS Setup ------------------
-# Allow requests from Next.js dev server (localhost:3000)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # frontend origin
+    allow_origins=["https://legatora.vercel.app/"],  
     allow_credentials=True,
-    allow_methods=["*"],  # allow GET, POST, PATCH, DELETE, OPTIONS
-    allow_headers=["*"],  # allow all headers
+    allow_methods=["*"],  
+    allow_headers=["*"], 
 )
 # ------------------------------------------------
 
@@ -27,17 +26,13 @@ app.add_middleware(
 def read_root():
     return {"message": "Welcome to the LEGATORA Admin Mock API. Check out /docs for endpoints."}
 
-# -----------------------------------------------------------
-# 1. Dashboard Endpoints
-# -----------------------------------------------------------
+
 @app.get("/dashboard", response_model=DashboardData, tags=["Dashboard"])
 def get_dashboard_summary():
     """Returns key metrics and activity data for the admin dashboard."""
     return crud.get_mock_dashboard_data()
 
-# -----------------------------------------------------------
-# 2. POA Requests Endpoints
-# -----------------------------------------------------------
+
 @app.get("/poa-requests", response_model=List[POARequestBase], tags=["POA Requests"])
 def list_poa_requests(
     category: Optional[str] = Query(None, description="Filter by POA category (e.g., Property, Medical)"),
@@ -91,9 +86,7 @@ def delete_poa_request_endpoint(request_id: str):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"POA Request {request_id} not found.")
     return {"message": f"POA Request {request_id} deleted successfully."}
 
-# -----------------------------------------------------------
-# 3. External Document Verification Endpoints
-# -----------------------------------------------------------
+
 @app.get("/external-doc-verification", response_model=List[ExternalDocVerification], tags=["External Document Verification"])
 def list_external_doc_verifications(
     category: Optional[str] = Query(None, description="Filter by document category"),
@@ -126,3 +119,4 @@ def delete_external_doc_verification_endpoint(request_id: str):
     if not success:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"External Doc Verification {request_id} not found.")
     return {"message": f"External Doc Verification {request_id} deleted successfully."}
+
