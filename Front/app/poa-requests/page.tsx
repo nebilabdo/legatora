@@ -33,17 +33,18 @@ export default function POARequestsPage() {
       const data = await res.json()
 
       const mapped: POARequest[] = data.map((item: any) => ({
-        id: item.request_id,
-        principal: item.full_name,
-        category: item.category.charAt(0).toUpperCase() + item.category.slice(1),
-        submitted: new Date(item.submitted_date || item.created_at).toLocaleDateString('en-GB'),
-        agent: item.assigned_agent || 'Not Assigned',
-        status: item.status.toLowerCase().includes('pending')
-          ? 'pending'
-          : item.status.toLowerCase().includes('approved') || item.status.toLowerCase().includes('active')
-            ? 'active'
-            : 'rejected',
-      }))
+  id: item.request_id,
+  principal: item.principal,  // <-- use 'principal', not 'full_name'
+  category: item.category.charAt(0).toUpperCase() + item.category.slice(1),
+  submitted: new Date(item.submitted_date).toLocaleDateString('en-GB'),
+  agent: item.assigned_agent || 'Not Assigned',
+  status: item.status.toLowerCase().includes('pending')
+    ? 'pending'
+    : item.status.toLowerCase().includes('approved') || item.status.toLowerCase().includes('active')
+      ? 'active'
+      : 'rejected',
+}))
+
 
       setRequests(mapped)
     } catch (err) {
