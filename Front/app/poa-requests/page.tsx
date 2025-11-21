@@ -80,7 +80,7 @@ export default function POARequestsPage() {
       </div>
 
       {/* Main content: reduced margin-left to decrease gap between sidebar and content */}
-      <main className="flex-1 flex flex-col min-w-0 ml-48 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 ml-2 overflow-hidden">
         <Header />
 
         <div className="flex-1 overflow-y-auto p-6">
