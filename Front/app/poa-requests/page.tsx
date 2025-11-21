@@ -79,8 +79,8 @@ export default function POARequestsPage() {
         <Sidebar />
       </div>
 
-      {/* Main content: offset with margin-left to avoid sidebar overlap */}
-      <main className="flex-1 flex flex-col min-w-0 ml-56 overflow-hidden">
+      {/* Main content: reduced margin-left to decrease gap between sidebar and content */}
+      <main className="flex-1 flex flex-col min-w-0 ml-48 overflow-hidden">
         <Header />
 
         <div className="flex-1 overflow-y-auto p-6">
@@ -125,4 +125,3 @@ export default function POARequestsPage() {
     </div>
   )
 }
-//fixed one
