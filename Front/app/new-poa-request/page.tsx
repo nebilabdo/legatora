@@ -1,6 +1,9 @@
+// app/new-poa-request/page.tsx
 'use client'
 
 import { useState } from 'react'
+import { Sidebar } from '@/components/sidebar'
+import { Header } from '@/components/header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -52,93 +55,226 @@ export default function NewPOARequestPage() {
         router.push('/poa-requests') // Back to list
       } else {
         const err = await res.json()
-        alert('Error: ' + JSON.stringify(err.detail || 'Failed'))
+        alert('Error: ' + JSON.stringify(err.detail || 'Failed to create request'))
       }
     } catch (err) {
-      alert('Backend not running. Start: uvicorn main:app --reload')
+      console.error('Submission error:', err)
+      alert('Failed to connect to server. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        <button onClick={() => router.back()} className="flex items-center gap-2 mb-8 text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="w-5 h-5" /> Back
-        </button>
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <Header />
+        
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-auto p-6">
+          <div className="max-w-4xl mx-auto">
+            {/* Back Button */}
+            <button 
+              onClick={() => router.back()} 
+              className="flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" /> 
+              Back
+            </button>
 
-        <h1 className="text-4xl font-bold mb-4">Create New POA Request</h1>
-        <p className="text-muted-foreground mb-10">Submit your Power of Attorney application</p>
-
-        <form onSubmit={handleSubmit} className="bg-card p-10 rounded-2xl border shadow-lg space-y-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <Label>Full Name *</Label>
-              <Input name="full_name" required placeholder="Md. Ekramul Hasan" disabled={loading} />
+            {/* Page Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New POA Request</h1>
+              <p className="text-gray-600">Submit your Power of Attorney application</p>
             </div>
-            <div>
-              <Label>Contact Info *</Label>
-              <Input name="contact_info" required placeholder="+88017..." disabled={loading} />
-            </div>
-          </div>
 
-          <div>
-            <Label>Address *</Label>
-            <Textarea name="address" required rows={3} disabled={loading} />
-          </div>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 space-y-8">
+              {/* Personal Information */}
+              <div className="space-y-6">
+                <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Personal Information</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="full_name" className="text-sm font-medium text-gray-700">
+                      Full Name *
+                    </Label>
+                    <Input 
+                      id="full_name"
+                      name="full_name" 
+                      required 
+                      placeholder="Enter full legal name"
+                      disabled={loading}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="contact_info" className="text-sm font-medium text-gray-700">
+                      Contact Info *
+                    </Label>
+                    <Input 
+                      id="contact_info"
+                      name="contact_info" 
+                      required 
+                      placeholder="Phone number or email"
+                      disabled={loading}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <Label>Category *</Label>
-              <Select name="category" required disabled={loading}>
-                <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="property">Property</SelectItem>
-                  <SelectItem value="vehicle">Vehicle</SelectItem>
-                  <SelectItem value="medical">Medical</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
-                  <SelectItem value="general">General</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Expiration Date *</Label>
-              <Input name="expiration_date" type="date" required disabled={loading} />
-            </div>
-          </div>
-
-          <div>
-            <Label>Description of Powers *</Label>
-            <Textarea name="description_of_power" required rows={6} disabled={loading} />
-          </div>
-
-          <div>
-            <Label>Quick Checklist (Optional)</Label>
-            <div className="mt-4 grid md:grid-cols-2 gap-4">
-              {checklistOptions.map(item => (
-                <label key={item} className="flex items-center gap-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer">
-                  <Checkbox
-                    checked={checklist.includes(item)}
-                    onCheckedChange={(c) => c ? setChecklist([...checklist, item]) : setChecklist(checklist.filter(i => i !== item))}
+                <div className="space-y-2">
+                  <Label htmlFor="address" className="text-sm font-medium text-gray-700">
+                    Address *
+                  </Label>
+                  <Textarea 
+                    id="address"
+                    name="address" 
+                    required 
+                    rows={3} 
+                    placeholder="Enter complete residential address"
                     disabled={loading}
+                    className="w-full resize-none"
                   />
-                  <span>{item}</span>
-                </label>
-              ))}
+                </div>
+              </div>
+
+              {/* POA Details */}
+              <div className="space-y-6">
+                <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">POA Details</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="category" className="text-sm font-medium text-gray-700">
+                      Category *
+                    </Label>
+                    <Select name="category" required disabled={loading}>
+                      <SelectTrigger id="category" className="w-full">
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="property">Property</SelectItem>
+                        <SelectItem value="vehicle">Vehicle</SelectItem>
+                        <SelectItem value="medical">Medical</SelectItem>
+                        <SelectItem value="business">Business</SelectItem>
+                        <SelectItem value="general">General</SelectItem>
+                        <SelectItem value="financial">Financial</SelectItem>
+                        <SelectItem value="legal">Legal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="expiration_date" className="text-sm font-medium text-gray-700">
+                      Expiration Date *
+                    </Label>
+                    <Input 
+                      id="expiration_date"
+                      name="expiration_date" 
+                      type="date" 
+                      required 
+                      disabled={loading}
+                      className="w-full"
+                      min={new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description_of_power" className="text-sm font-medium text-gray-700">
+                    Description of Powers *
+                  </Label>
+                  <Textarea 
+                    id="description_of_power"
+                    name="description_of_power" 
+                    required 
+                    rows={6} 
+                    placeholder="Describe in detail the specific powers being granted to the agent. Include any limitations or special instructions."
+                    disabled={loading}
+                    className="w-full resize-none"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Be specific about what the agent can and cannot do on your behalf.
+                  </p>
+                </div>
+              </div>
+
+              {/* Checklist Section */}
+              <div className="space-y-6">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">
+                    Quick Checklist (Optional)
+                  </Label>
+                  <p className="text-xs text-gray-500 mb-4">
+                    Select common powers to quickly define the scope of authority
+                  </p>
+                  
+                  <div className="mt-2 grid md:grid-cols-2 gap-3">
+                    {checklistOptions.map((item, index) => (
+                      <label 
+                        key={index} 
+                        className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors min-w-0"
+                      >
+                        <Checkbox
+                          checked={checklist.includes(item)}
+                          onCheckedChange={(checked) => 
+                            checked 
+                              ? setChecklist([...checklist, item])
+                              : setChecklist(checklist.filter(i => i !== item))
+                          }
+                          disabled={loading}
+                        />
+                        <span className="text-sm text-gray-700 flex-1 min-w-0 break-words">{item}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Form Actions */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  disabled={loading}
+                  className="flex-1 sm:flex-none"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Submit Request
+                    </>
+                  )}
+                </Button>
+                
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="lg" 
+                  onClick={() => router.push('/poa-requests')} 
+                  disabled={loading}
+                  className="flex-1 sm:flex-none"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+
+            {/* Help Text */}
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-500">
+                Need help? Contact support at support@legatora.com
+              </p>
             </div>
           </div>
-
-          <div className="flex gap-4 pt-6 border-t">
-            <Button type="submit" size="lg" disabled={loading}>
-              {loading ? <Loader2 className="mr-2 animate-spin" /> : <CheckCircle className="mr-2" />}
-              {loading ? 'Submitting...' : 'Submit Request'}
-            </Button>
-            <Button type="button" variant="outline" size="lg" onClick={() => router.push('/poa-requests')} disabled={loading}>
-              Cancel
-            </Button>
-          </div>
-        </form>
+        </main>
       </div>
     </div>
   )
