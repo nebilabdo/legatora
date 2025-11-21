@@ -1,4 +1,3 @@
-// app/poa-requests/[id]/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -191,8 +190,10 @@ export default function RequestDetailPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen bg-gray-50">
-        <Sidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="w-64 flex-shrink-0">
+          <Sidebar />
+        </div>
+        <div className="flex-1 flex flex-col min-w-0 ml-64">
           <Header />
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-3 text-gray-600">
@@ -208,8 +209,10 @@ export default function RequestDetailPage() {
   if (error || !request) {
     return (
       <div className="flex min-h-screen bg-gray-50">
-        <Sidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="w-64 flex-shrink-0">
+          <Sidebar />
+        </div>
+        <div className="flex-1 flex flex-col min-w-0 ml-64">
           <Header />
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center max-w-md mx-auto p-6">
@@ -241,8 +244,13 @@ export default function RequestDetailPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0"> {/* Added min-w-0 to prevent overflow */}
+      {/* Sidebar with fixed width */}
+      <div className="w-64 flex-shrink-0">
+        <Sidebar />
+      </div>
+
+      {/* Main content with proper margin to avoid overlap */}
+      <div className="flex-1 flex flex-col min-w-0 ml-64">
         <Header />
         
         {/* Main Content Area with proper spacing */}
@@ -258,13 +266,13 @@ export default function RequestDetailPage() {
                 Back to Requests
               </button>
               <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-                <div className="min-w-0 flex-1"> {/* Added min-w-0 and flex-1 */}
+                <div className="min-w-0 flex-1">
                   <h1 className="text-2xl font-bold text-gray-900 truncate">Request POA-{request.request_id}</h1>
                   <p className="text-sm text-gray-500 mt-1 truncate">
                     Principal: {request.full_name} | Category: {request.category} | Submitted: {formatDate(request.submitted_date)}
                   </p>
                 </div>
-                <div className="flex items-center gap-3 flex-wrap shrink-0"> {/* Added shrink-0 */}
+                <div className="flex items-center gap-3 flex-wrap shrink-0">
                   <span className={`px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 border ${getStatusColor(request.status)}`}>
                     {getStatusIcon(request.status)}
                     {request.status}
@@ -279,12 +287,12 @@ export default function RequestDetailPage() {
             {/* Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column - Principal Info */}
-              <div className="lg:col-span-2 space-y-6 min-w-0"> {/* Added min-w-0 */}
+              <div className="lg:col-span-2 space-y-6 min-w-0">
                 {/* Principal Information */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <h2 className="text-lg font-semibold mb-4">Principal Information</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="min-w-0"> {/* Added min-w-0 */}
+                    <div className="min-w-0">
                       <p className="text-sm text-gray-500 mb-1">Full Name</p>
                       <p className="font-medium text-gray-900 truncate">{request.full_name}</p>
                     </div>
