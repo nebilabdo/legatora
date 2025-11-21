@@ -1,5 +1,6 @@
 'use client'
-//new poa -request
+
+// new poa-request
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,7 +64,7 @@ export default function NewPOARequestPage() {
 
   return (
     <div className="min-h-screen bg-background py-12 px-6 md:pl-64">
-      {/* md:pl-64 adds padding so sidebar does not hide content */}
+      {/* Added md:pl-64 so sidebar does not hide content */}
       <div className="max-w-4xl mx-auto w-full">
         <button
           onClick={() => router.back()}
