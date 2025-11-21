@@ -31,8 +31,6 @@ export default function POARequestsPage() {
       if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`)
 
       const data = await res.json()
-
-      // Handle different response formats
       const requestsData = Array.isArray(data) ? data : (data.requests || data.data || [])
       
       const mapped: POARequest[] = requestsData.map((item: any) => ({
@@ -63,7 +61,6 @@ export default function POARequestsPage() {
   }, [])
 
   const handleViewDetails = (request: POARequest) => {
-    // Navigate to request detail page
     router.push(`/poa-requests/${request.id}`)
   }
 
@@ -76,10 +73,14 @@ export default function POARequestsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar />
+    <div className="flex min-h-screen bg-background">
+      {/* Sidebar */}
+      <div className="w-56 flex-shrink-0">
+        <Sidebar />
+      </div>
 
-      <main className="flex-1 lg:ml-56 flex flex-col overflow-hidden">
+      {/* Main content: offset with margin-left to avoid sidebar overlap */}
+      <main className="flex-1 flex flex-col min-w-0 ml-56 overflow-hidden">
         <Header />
 
         <div className="flex-1 overflow-y-auto p-6">
