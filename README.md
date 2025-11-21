@@ -35,24 +35,26 @@
 ```bash
 git clone https://github.com/your-username/legatora.git
 cd legatora
-2 Backend Setup
+Backend Setup
+
+bash
+Copy code
 cd Backend
 pip install -r requirements.txt
 uvicorn main:app --reload
 Frontend Setup
 
+bash
+Copy code
 cd Front
 npm install
 npm run dev
-
 ⚡ Deployment
-
 Frontend: Deploy to Vercel
 
 Backend: Deploy to Render
 
 💻 Usage
-
 Open the frontend in your browser (default: http://localhost:3000).
 
 Log in as an admin to manage POA requests, verify documents, and monitor analytics.
@@ -60,5 +62,7 @@ Log in as an admin to manage POA requests, verify documents, and monitor analyti
 Users can submit POA requests and track their status.
 
 🤝 Contributing
-
 Contributions are welcome! Please fork the repository and create a pull request with your improvements.
+
+📄 License
+MIT License © 2025
