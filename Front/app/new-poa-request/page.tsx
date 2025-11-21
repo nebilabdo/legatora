@@ -1,4 +1,3 @@
-// app/new-poa-request/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -63,16 +62,23 @@ export default function NewPOARequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        <button onClick={() => router.back()} className="flex items-center gap-2 mb-8 text-muted-foreground hover:text-foreground">
+    <div className="min-h-screen bg-background py-12 px-6 md:pl-64">
+      {/* md:pl-64 adds padding so sidebar does not hide content */}
+      <div className="max-w-4xl mx-auto w-full">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 mb-8 text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="w-5 h-5" /> Back
         </button>
 
         <h1 className="text-4xl font-bold mb-4">Create New POA Request</h1>
         <p className="text-muted-foreground mb-10">Submit your Power of Attorney application</p>
 
-        <form onSubmit={handleSubmit} className="bg-card p-10 rounded-2xl border shadow-lg space-y-8">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-card p-10 rounded-2xl border shadow-lg space-y-8 overflow-auto max-h-[calc(100vh-6rem)]"
+        >
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <Label>Full Name *</Label>
