@@ -42,7 +42,7 @@ export default function NewPOARequestPage() {
     }
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/poa-requests', {
+      const res = await fetch('https://legatora-backend.onrender.com/poa-requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
