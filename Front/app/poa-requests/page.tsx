@@ -28,27 +28,30 @@ export default function POARequestsPage() {
       setError(null)
 
       const res = await fetch('https://legatora-backend.onrender.com/poa-requests')
-      if (!res.ok) throw new Error('Failed to fetch')
+      if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`)
 
       const data = await res.json()
 
-      const mapped: POARequest[] = data.map((item: any) => ({
-  id: item.request_id,
-  principal: item.principal,  // <-- use 'principal', not 'full_name'
-  category: item.category.charAt(0).toUpperCase() + item.category.slice(1),
-  submitted: new Date(item.submitted_date).toLocaleDateString('en-GB'),
-  agent: item.assigned_agent || 'Not Assigned',
-  status: item.status.toLowerCase().includes('pending')
-    ? 'pending'
-    : item.status.toLowerCase().includes('approved') || item.status.toLowerCase().includes('active')
-      ? 'active'
-      : 'rejected',
-}))
-
+      // Handle different response formats
+      const requestsData = Array.isArray(data) ? data : (data.requests || data.data || [])
+      
+      const mapped: POARequest[] = requestsData.map((item: any) => ({
+        id: item.request_id || item.id,
+        principal: item.full_name || item.principal || 'Unknown',
+        category: item.category ? item.category.charAt(0).toUpperCase() + item.category.slice(1) : 'General',
+        submitted: new Date(item.submitted_date || item.created_at || item.date).toLocaleDateString('en-GB'),
+        agent: item.assigned_agent || 'Not Assigned',
+        status: item.status?.toLowerCase().includes('pending')
+          ? 'pending'
+          : item.status?.toLowerCase().includes('approved') || item.status?.toLowerCase().includes('active')
+            ? 'active'
+            : 'rejected',
+      }))
 
       setRequests(mapped)
     } catch (err) {
-      setError('Cannot load requests – check if backend is running')
+      console.error('Error fetching requests:', err)
+      setError('Cannot load requests – please check your connection and try again')
       setRequests([])
     } finally {
       setLoading(false)
@@ -59,14 +62,17 @@ export default function POARequestsPage() {
     fetchRequests()
   }, [])
 
-  // These two functions fix the TypeScript error
   const handleViewDetails = (request: POARequest) => {
-    // You can expand this later
-    alert(`Viewing: ${request.id} – ${request.principal}`)
+    // Navigate to request detail page
+    router.push(`/poa-requests/${request.id}`)
   }
 
   const handleNewRequest = () => {
     router.push('/new-poa-request')
+  }
+
+  const handleRetry = () => {
+    fetchRequests()
   }
 
   return (
@@ -76,23 +82,33 @@ export default function POARequestsPage() {
       <main className="flex-1 lg:ml-56 flex flex-col overflow-hidden">
         <Header />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
             <div className="flex items-center justify-center h-96">
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+              <div className="flex items-center gap-3 text-gray-600">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <span>Loading requests...</span>
+              </div>
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center h-96 text-center">
-              <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-              <p className="text-lg font-medium text-destructive">{error}</p>
-              <button onClick={fetchRequests} className="mt-4 px-6 py-2 bg-primary text-primary-foreground rounded-lg">
-                Retry
+              <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+              <p className="text-lg font-medium text-gray-900 mb-2">Unable to Load Requests</p>
+              <p className="text-gray-600 mb-6">{error}</p>
+              <button 
+                onClick={handleRetry} 
+                className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+              >
+                Try Again
               </button>
             </div>
           ) : requests.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-xl text-muted-foreground mb-6">No POA requests found</p>
-              <button onClick={handleNewRequest} className="px-8 py-3 bg-primary text-white rounded-lg text-lg">
+              <p className="text-xl text-gray-600 mb-6">No POA requests found</p>
+              <button 
+                onClick={handleNewRequest} 
+                className="px-8 py-3 bg-teal-600 text-white rounded-lg text-lg hover:bg-teal-700 transition-colors"
+              >
                 Create Your First Request
               </button>
             </div>
