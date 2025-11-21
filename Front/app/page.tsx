@@ -32,7 +32,7 @@ export default function Dashboard() {
       setLoading(true)
       setError(null)
 
-      const res = await fetch('http://127.0.0.1:8000/dashboard', {
+      const res = await fetch('https://legatora-backend.onrender.com/dashboard', {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
