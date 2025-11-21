@@ -55,10 +55,27 @@ export default function RequestDetailPage() {
       if (!res.ok) throw new Error('Failed to fetch request details')
 
       const data = await res.json()
-      setRequest(data)
+
+      // Map backend fields to frontend expected fields
+      setRequest({
+        request_id: data.request_id,
+        full_name: data.principal || 'N/A',
+        contact_info: data.contact_info || 'N/A',
+        address: data.address || 'N/A',
+        category: data.category || 'General',
+        status: data.status || 'Pending',
+        submitted_date: data.submitted_date || new Date().toISOString(),
+        assigned_agent: data.assigned_agent || null,
+        documents: data.documents || [],
+        powers_description: data.description_of_power || '',
+        digital_signature_url: data.digital_signature_url || undefined,
+        poa_template_preview: data.poa_template_preview || undefined,
+        workflow: data.workflow || [],
+      })
     } catch (err) {
-      setError('Failed to load request details. Please try again.')
       console.error(err)
+      setError('Failed to load request details. Please try again.')
+      setRequest(null)
     } finally {
       setLoading(false)
     }
@@ -69,18 +86,16 @@ export default function RequestDetailPage() {
   }, [requestId])
 
   const getStatusColor = (status: string) => {
-    if (status.toLowerCase().includes('progress') || status.toLowerCase().includes('pending'))
-      return 'bg-yellow-100 text-yellow-800'
-    if (status.toLowerCase().includes('approved') || status.toLowerCase().includes('active'))
-      return 'bg-green-100 text-green-800'
+    const s = status.toLowerCase()
+    if (s.includes('progress') || s.includes('pending')) return 'bg-yellow-100 text-yellow-800'
+    if (s.includes('approved') || s.includes('active')) return 'bg-green-100 text-green-800'
     return 'bg-gray-100 text-gray-800'
   }
 
   const getStatusIcon = (status: string) => {
-    if (status.toLowerCase().includes('progress') || status.toLowerCase().includes('pending'))
-      return <Clock className="w-4 h-4" />
-    if (status.toLowerCase().includes('approved') || status.toLowerCase().includes('active'))
-      return <CheckCircle className="w-4 h-4" />
+    const s = status.toLowerCase()
+    if (s.includes('progress') || s.includes('pending')) return <Clock className="w-4 h-4" />
+    if (s.includes('approved') || s.includes('active')) return <CheckCircle className="w-4 h-4" />
     return <UserCheck className="w-4 h-4" />
   }
 
@@ -139,7 +154,7 @@ export default function RequestDetailPage() {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Request POA-{request.request_id}</h1>
                 <p className="text-sm text-gray-500">
-                  Principal: Abebe Bikila | Category: {request.category}
+                  Principal: {request.full_name} | Category: {request.category}
                 </p>
               </div>
               <div className="flex items-center gap-3">
