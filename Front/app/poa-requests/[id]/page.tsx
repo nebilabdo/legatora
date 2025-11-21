@@ -1,5 +1,5 @@
 'use client'
-//
+
 import { useState, useEffect } from 'react'
 import { Sidebar } from '@/components/sidebar'
 import { Header } from '@/components/header'
@@ -193,7 +193,7 @@ export default function RequestDetailPage() {
         <div className="w-64 flex-shrink-0">
           <Sidebar />
         </div>
-        <div className="flex-1 flex flex-col min-w-0 ml-64">
+        <div className="flex-1 flex flex-col min-w-0 ml-4">
           <Header />
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-3 text-gray-600">
@@ -212,7 +212,7 @@ export default function RequestDetailPage() {
         <div className="w-64 flex-shrink-0">
           <Sidebar />
         </div>
-        <div className="flex-1 flex flex-col min-w-0 ml-64">
+        <div className="flex-1 flex flex-col min-w-0 ml-4">
           <Header />
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center max-w-md mx-auto p-6">
@@ -249,8 +249,8 @@ export default function RequestDetailPage() {
         <Sidebar />
       </div>
 
-      {/* Main content with proper margin to avoid overlap */}
-      <div className="flex-1 flex flex-col min-w-0 ml-64">
+      {/* Main content with perfect gap */}
+      <div className="flex-1 flex flex-col min-w-0 ml-4">
         <Header />
         
         {/* Main Content Area with proper spacing */}
