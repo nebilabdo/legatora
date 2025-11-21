@@ -1,4 +1,3 @@
-// app/new-poa-request/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -32,7 +31,6 @@ export default function NewPOARequestPage() {
     setLoading(true)
 
     const form = e.currentTarget
-
     const payload = {
       full_name: form.full_name.value.trim(),
       contact_info: form.contact_info.value.trim(),
@@ -52,7 +50,7 @@ export default function NewPOARequestPage() {
 
       if (res.ok) {
         alert('POA Request Created Successfully!')
-        router.push('/poa-requests') // Back to list
+        router.push('/poa-requests')
       } else {
         const err = await res.json()
         alert('Error: ' + JSON.stringify(err.detail || 'Failed to create request'))
@@ -67,14 +65,17 @@ export default function NewPOARequestPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
+      {/* Sidebar: fixed width to prevent overlapping */}
+      <div className="w-64 flex-shrink-0">
+        <Sidebar />
+      </div>
+
+      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         <Header />
-        
-        {/* Main Content Area */}
+
         <main className="flex-1 overflow-auto p-6">
           <div className="max-w-4xl mx-auto">
-            {/* Back Button */}
             <button 
               onClick={() => router.back()} 
               className="flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-900 transition-colors"
@@ -83,73 +84,37 @@ export default function NewPOARequestPage() {
               Back
             </button>
 
-            {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New POA Request</h1>
               <p className="text-gray-600">Submit your Power of Attorney application</p>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 space-y-8">
               {/* Personal Information */}
               <div className="space-y-6">
                 <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Personal Information</h2>
-                
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="full_name" className="text-sm font-medium text-gray-700">
-                      Full Name *
-                    </Label>
-                    <Input 
-                      id="full_name"
-                      name="full_name" 
-                      required 
-                      placeholder="Enter full legal name"
-                      disabled={loading}
-                      className="w-full"
-                    />
+                    <Label htmlFor="full_name">Full Name *</Label>
+                    <Input id="full_name" name="full_name" required placeholder="Enter full legal name" disabled={loading} className="w-full" />
                   </div>
-                  
                   <div className="space-y-2">
-                    <Label htmlFor="contact_info" className="text-sm font-medium text-gray-700">
-                      Contact Info *
-                    </Label>
-                    <Input 
-                      id="contact_info"
-                      name="contact_info" 
-                      required 
-                      placeholder="Phone number or email"
-                      disabled={loading}
-                      className="w-full"
-                    />
+                    <Label htmlFor="contact_info">Contact Info *</Label>
+                    <Input id="contact_info" name="contact_info" required placeholder="Phone number or email" disabled={loading} className="w-full" />
                   </div>
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="address" className="text-sm font-medium text-gray-700">
-                    Address *
-                  </Label>
-                  <Textarea 
-                    id="address"
-                    name="address" 
-                    required 
-                    rows={3} 
-                    placeholder="Enter complete residential address"
-                    disabled={loading}
-                    className="w-full resize-none"
-                  />
+                  <Label htmlFor="address">Address *</Label>
+                  <Textarea id="address" name="address" required rows={3} placeholder="Enter complete residential address" disabled={loading} className="w-full resize-none" />
                 </div>
               </div>
 
               {/* POA Details */}
               <div className="space-y-6">
                 <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">POA Details</h2>
-                
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="category" className="text-sm font-medium text-gray-700">
-                      Category *
-                    </Label>
+                    <Label htmlFor="category">Category *</Label>
                     <Select name="category" required disabled={loading}>
                       <SelectTrigger id="category" className="w-full">
                         <SelectValue placeholder="Select category" />
@@ -165,113 +130,51 @@ export default function NewPOARequestPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  
                   <div className="space-y-2">
-                    <Label htmlFor="expiration_date" className="text-sm font-medium text-gray-700">
-                      Expiration Date *
-                    </Label>
-                    <Input 
-                      id="expiration_date"
-                      name="expiration_date" 
-                      type="date" 
-                      required 
-                      disabled={loading}
-                      className="w-full"
-                      min={new Date().toISOString().split('T')[0]}
-                    />
+                    <Label htmlFor="expiration_date">Expiration Date *</Label>
+                    <Input id="expiration_date" name="expiration_date" type="date" required disabled={loading} className="w-full" min={new Date().toISOString().split('T')[0]} />
                   </div>
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="description_of_power" className="text-sm font-medium text-gray-700">
-                    Description of Powers *
-                  </Label>
-                  <Textarea 
-                    id="description_of_power"
-                    name="description_of_power" 
-                    required 
-                    rows={6} 
-                    placeholder="Describe in detail the specific powers being granted to the agent. Include any limitations or special instructions."
-                    disabled={loading}
-                    className="w-full resize-none"
-                  />
-                  <p className="text-xs text-gray-500">
-                    Be specific about what the agent can and cannot do on your behalf.
-                  </p>
+                  <Label htmlFor="description_of_power">Description of Powers *</Label>
+                  <Textarea id="description_of_power" name="description_of_power" required rows={6} placeholder="Describe powers..." disabled={loading} className="w-full resize-none" />
+                  <p className="text-xs text-gray-500">Be specific about what the agent can and cannot do.</p>
                 </div>
               </div>
 
-              {/* Checklist Section */}
+              {/* Checklist */}
               <div className="space-y-6">
-                <div>
-                  <Label className="text-sm font-medium text-gray-700">
-                    Quick Checklist (Optional)
-                  </Label>
-                  <p className="text-xs text-gray-500 mb-4">
-                    Select common powers to quickly define the scope of authority
-                  </p>
-                  
-                  <div className="mt-2 grid md:grid-cols-2 gap-3">
-                    {checklistOptions.map((item, index) => (
-                      <label 
-                        key={index} 
-                        className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors min-w-0"
-                      >
-                        <Checkbox
-                          checked={checklist.includes(item)}
-                          onCheckedChange={(checked) => 
-                            checked 
-                              ? setChecklist([...checklist, item])
-                              : setChecklist(checklist.filter(i => i !== item))
-                          }
-                          disabled={loading}
-                        />
-                        <span className="text-sm text-gray-700 flex-1 min-w-0 break-words">{item}</span>
-                      </label>
-                    ))}
-                  </div>
+                <Label>Quick Checklist (Optional)</Label>
+                <p className="text-xs text-gray-500 mb-4">Select common powers to quickly define the scope of authority</p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {checklistOptions.map((item, index) => (
+                    <label key={index} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer min-w-0">
+                      <Checkbox
+                        checked={checklist.includes(item)}
+                        onCheckedChange={(checked) => 
+                          checked ? setChecklist([...checklist, item]) : setChecklist(checklist.filter(i => i !== item))
+                        }
+                        disabled={loading}
+                      />
+                      <span className="text-sm text-gray-700 flex-1 min-w-0 break-words">{item}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
               {/* Form Actions */}
               <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-                <Button 
-                  type="submit" 
-                  size="lg" 
-                  disabled={loading}
-                  className="flex-1 sm:flex-none"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Submit Request
-                    </>
-                  )}
+                <Button type="submit" size="lg" disabled={loading} className="flex-1 sm:flex-none">
+                  {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Submitting...</> : <><CheckCircle className="w-4 h-4 mr-2" />Submit Request</>}
                 </Button>
-                
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="lg" 
-                  onClick={() => router.push('/poa-requests')} 
-                  disabled={loading}
-                  className="flex-1 sm:flex-none"
-                >
+                <Button type="button" variant="outline" size="lg" onClick={() => router.push('/poa-requests')} disabled={loading} className="flex-1 sm:flex-none">
                   Cancel
                 </Button>
               </div>
             </form>
 
-            {/* Help Text */}
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500">
-                Need help? Contact support at support@legatora.com
-              </p>
+              <p className="text-sm text-gray-500">Need help? Contact support at support@legatora.com</p>
             </div>
           </div>
         </main>
