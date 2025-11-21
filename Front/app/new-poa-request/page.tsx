@@ -65,13 +65,13 @@ export default function NewPOARequestPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar: fixed width to prevent overlapping */}
+      {/* Sidebar */}
       <div className="w-64 flex-shrink-0">
         <Sidebar />
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      {/* Main content: added ml-64 to prevent sidebar overlap */}
+      <div className="flex-1 flex flex-col min-w-0 ml-64">
         <Header />
 
         <main className="flex-1 overflow-auto p-6">
