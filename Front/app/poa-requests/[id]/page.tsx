@@ -66,7 +66,13 @@ export default function RequestDetailPage() {
         status: data.status || 'Pending',
         submitted_date: data.submitted_date || new Date().toISOString(),
         assigned_agent: data.assigned_agent || null,
-        documents: data.documents || [],
+       documents: data.files?.map(f => ({
+  id: f.file_id,
+  filename: f.document_type,
+  url: `https://legatora-backend.onrender.com${f.file_link}`,
+  type: f.document_type
+})) || []
+,
         powers_description: data.description_of_power || '',
         digital_signature_url: data.digital_signature_url || undefined,
         poa_template_preview: data.poa_template_preview || undefined,
