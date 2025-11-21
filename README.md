@@ -39,6 +39,7 @@ Backend Setup
 
 bash
 Copy code
+
 cd Backend
 pip install -r requirements.txt
 uvicorn main:app --reload
@@ -46,6 +47,7 @@ Frontend Setup
 
 bash
 Copy code
+
 cd Front
 npm install
 npm run dev
