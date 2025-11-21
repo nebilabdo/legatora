@@ -56,7 +56,7 @@ export default function RequestDetailPage() {
 
       const data = await res.json()
 
-      // Map backend fields to frontend expected fields
+      // FIX: backend uses "principal" not "full_name"
       setRequest({
         request_id: data.request_id,
         full_name: data.principal || 'N/A',
