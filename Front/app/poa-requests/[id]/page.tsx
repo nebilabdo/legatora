@@ -51,7 +51,7 @@ export default function RequestDetailPage() {
       setLoading(true)
       setError(null)
 
-      const res = await fetch(`http://127.0.0.1:8000/poa-requests/${requestId}`)
+      const res = await fetch(`https://legatora-backend.onrender.com/poa-requests/${requestId}`)
       if (!res.ok) throw new Error('Failed to fetch request details')
 
       const data = await res.json()
