@@ -15,7 +15,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://legatora.vercel.app/"],  
+    allow_origins=["https://legatora.vercel.app"],  
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"], 
@@ -119,4 +119,5 @@ def delete_external_doc_verification_endpoint(request_id: str):
     if not success:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"External Doc Verification {request_id} not found.")
     return {"message": f"External Doc Verification {request_id} deleted successfully."}
+
 
