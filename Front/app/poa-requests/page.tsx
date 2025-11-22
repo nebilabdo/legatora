@@ -28,28 +28,26 @@ export default function POARequestsPage() {
       setError(null)
 
       const res = await fetch('https://legatora-backend.onrender.com/poa-requests')
-      if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`)
+      if (!res.ok) throw new Error('Failed to fetch')
 
       const data = await res.json()
-      const requestsData = Array.isArray(data) ? data : (data.requests || data.data || [])
-      
-      const mapped: POARequest[] = requestsData.map((item: any) => ({
-        id: item.request_id || item.id,
-        principal: item.full_name || item.principal || 'Unknown',
-        category: item.category ? item.category.charAt(0).toUpperCase() + item.category.slice(1) : 'General',
-        submitted: new Date(item.submitted_date || item.created_at || item.date).toLocaleDateString('en-GB'),
+
+      const mapped: POARequest[] = data.map((item: any) => ({
+        id: item.request_id,
+        principal: item.full_name,
+        category: item.category.charAt(0).toUpperCase() + item.category.slice(1),
+        submitted: new Date(item.submitted_date || item.created_at).toLocaleDateString('en-GB'),
         agent: item.assigned_agent || 'Not Assigned',
-        status: item.status?.toLowerCase().includes('pending')
+        status: item.status.toLowerCase().includes('pending')
           ? 'pending'
-          : item.status?.toLowerCase().includes('approved') || item.status?.toLowerCase().includes('active')
+          : item.status.toLowerCase().includes('approved') || item.status.toLowerCase().includes('active')
             ? 'active'
             : 'rejected',
       }))
 
       setRequests(mapped)
     } catch (err) {
-      console.error('Error fetching requests:', err)
-      setError('Cannot load requests – please check your connection and try again')
+      setError('Cannot load requests – check if backend is running')
       setRequests([])
     } finally {
       setLoading(false)
@@ -60,56 +58,40 @@ export default function POARequestsPage() {
     fetchRequests()
   }, [])
 
+  // These two functions fix the TypeScript error
   const handleViewDetails = (request: POARequest) => {
-    router.push(`/poa-requests/${request.id}`)
+    // You can expand this later
+    alert(`Viewing: ${request.id} – ${request.principal}`)
   }
 
   const handleNewRequest = () => {
     router.push('/new-poa-request')
   }
 
-  const handleRetry = () => {
-    fetchRequests()
-  }
-
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar - hidden on mobile, visible on desktop */}
-      <div className="hidden md:block w-56 flex-shrink-0">
-        <Sidebar />
-      </div>
+    <div className="flex h-screen bg-background">
+      <Sidebar />
 
-      {/* Main content: minimal gap on desktop, no gap on mobile */}
-      <main className="flex-1 flex flex-col min-w-0 md:ml-2 overflow-hidden">
+      <main className="flex-1 lg:ml-56 flex flex-col overflow-hidden">
         <Header />
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">
+        <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center h-96">
-              <div className="flex items-center gap-3 text-gray-600">
-                <Loader2 className="h-6 w-6 animate-spin" />
-                <span>Loading requests...</span>
-              </div>
+              <Loader2 className="h-12 w-12 animate-spin text-primary" />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center h-96 text-center">
-              <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
-              <p className="text-lg font-medium text-gray-900 mb-2">Unable to Load Requests</p>
-              <p className="text-gray-600 mb-6">{error}</p>
-              <button 
-                onClick={handleRetry} 
-                className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
-              >
-                Try Again
+              <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+              <p className="text-lg font-medium text-destructive">{error}</p>
+              <button onClick={fetchRequests} className="mt-4 px-6 py-2 bg-primary text-primary-foreground rounded-lg">
+                Retry
               </button>
             </div>
           ) : requests.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-xl text-gray-600 mb-6">No POA requests found</p>
-              <button 
-                onClick={handleNewRequest} 
-                className="px-8 py-3 bg-teal-600 text-white rounded-lg text-lg hover:bg-teal-700 transition-colors"
-              >
+              <p className="text-xl text-muted-foreground mb-6">No POA requests found</p>
+              <button onClick={handleNewRequest} className="px-8 py-3 bg-primary text-white rounded-lg text-lg">
                 Create Your First Request
               </button>
             </div>
