@@ -74,16 +74,16 @@ export default function POARequestsPage() {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
-      <div className="w-56 flex-shrink-0">
+      {/* Sidebar - hidden on mobile, visible on desktop */}
+      <div className="hidden md:block w-56 flex-shrink-0">
         <Sidebar />
       </div>
 
-      {/* Main content: reduced margin-left to decrease gap between sidebar and content */}
-      <main className="flex-1 flex flex-col min-w-0 ml-2 overflow-hidden">
+      {/* Main content: minimal gap on desktop, no gap on mobile */}
+      <main className="flex-1 flex flex-col min-w-0 md:ml-2 overflow-hidden">
         <Header />
 
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {loading ? (
             <div className="flex items-center justify-center h-96">
               <div className="flex items-center gap-3 text-gray-600">
